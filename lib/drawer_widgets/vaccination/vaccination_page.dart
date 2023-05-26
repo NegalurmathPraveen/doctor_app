@@ -25,6 +25,7 @@ class _VaccinationPageState extends State<VaccinationPage> {
     vaccinationList=await vaccinationApis.getVaccination(context);
     setState(() {});
   }
+
   Widget cardWidget(var response,var width,var height)
   {
     return Card(
@@ -40,7 +41,7 @@ class _VaccinationPageState extends State<VaccinationPage> {
                 fontFamily: 'Inter',
                 fontSize: 17,color:Colors.blue),),
             SizedBox(height:height*0.01,),
-            Text('${response.message.toString()}',style: TextStyle(
+            Text('vaccination - ${response.id.toString()}',style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Inter',
                 fontSize: 18,color:Color.fromRGBO(0, 0, 0, 0.87)),),

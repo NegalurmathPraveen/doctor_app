@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:doctor_app/patient/patient_api.dart';
 import 'package:http/http.dart' as http;
 
 import '../../api_error_handling.dart';
@@ -8,6 +9,7 @@ import '../../models/vaccination_model.dart';
 import '../../widgets/show_messages/show_snackbar.dart';
 
 class VaccinationApis{
+  PatientApi patientApi=PatientApi();
   SecureStorage secureStorage = SecureStorage();
   ShowSnackBar showSnackBar = ShowSnackBar();
   ApiErrorHandling apiErrorHandling = ApiErrorHandling();
@@ -78,5 +80,46 @@ class VaccinationApis{
           ));
     });
     return notList;
+  }
+
+  Future vaccinePatients(var date,var context) async{
+    try {
+      var vaccPatList = [];
+      print(date);
+      var url = Uri.parse(URL + 'vaccinePatients');
+      print(url);
+      var body={
+        'due_date':date.toString()
+      };
+      var Response = await http.post(url,body: json.encode(body),headers: {
+        'content-Type': 'application/json',
+      });
+      var response = json.decode(Response.body);
+      if (Response.statusCode == 200) {
+        print(response);
+        if (response['status'] == 'success') {
+          vaccPatList = patientApi.convertListToPatientModel(response['patients']);
+          return {
+            'status':true,
+            'ratio':response['ratio'],
+            'patList':vaccPatList
+          };
+        }
+        else {
+          showSnackBar.showToast('something went wrong!', context);
+          return {
+            'status':false,
+            'ratio':response['ratio'],
+            'patList':vaccPatList
+          };
+        }
+      }
+      else {
+        apiErrorHandling.apiErrorHandlerFun(Response.statusCode, context);
+        throw response;
+      }
+    } catch (error) {
+      print(error);
+    }
   }
 }

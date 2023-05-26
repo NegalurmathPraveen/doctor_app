@@ -1,6 +1,9 @@
 import 'package:doctor_app/notifications/notifications_api.dart';
 import 'package:doctor_app/patient/patient_api.dart';
 import 'package:flutter/material.dart';
+
+import '../patient_details/documents_display.dart';
+import 'documents_upload.dart';
 class Documents extends StatefulWidget {
   var type;
   var body;
@@ -63,7 +66,8 @@ NotificationApis notificationApis=NotificationApis();
               widget.type!='add'?Container():Text(
                 'Page 2 of 2',
                 style: Theme.of(context).textTheme.headline3,
-              )
+              ),
+              widget.type=='add'?DocumentsUpload():DocumentsDisplay()
             ],
           ),
         ),
