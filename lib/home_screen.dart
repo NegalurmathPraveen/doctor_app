@@ -6,6 +6,7 @@ import 'package:doctor_app/patient/patient_form.dart';
 import 'package:flutter/material.dart';
 
 import 'global_variables.dart';
+import 'patient/display_profile_image.dart';
 import 'patient/patient_details/patient_details_page.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -85,16 +86,17 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (c) => PatientDetailsPage(patDetails: response,)));
           },
-          leading:  Container(
-            width:width*0.12,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-                color: Colors.black12,
-                image:DecorationImage(
-                    fit: BoxFit.cover,
-                    image:  AssetImage('assets/images/Image.png',)
-                ) ),
-          ),
+          leading: ProfileImage(details:response),
+          // Container(
+          //   width:width*0.12,
+          //   decoration: BoxDecoration(
+          //     shape: BoxShape.circle,
+          //       color: Colors.black12,
+          //       image:DecorationImage(
+          //           fit: BoxFit.cover,
+          //           image:  AssetImage('assets/images/Image.png',)
+          //       ) ),
+          // ),
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

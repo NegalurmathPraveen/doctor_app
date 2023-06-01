@@ -24,13 +24,11 @@ class LogoWithName extends StatelessWidget {
                         image:  AssetImage('assets/images/splash_screen_image.png',)
                     ) ),
               ),
-              SizedBox(height:height * 0.02,),
+              SizedBox(height:height * 0.05,),
               Container(
                 width: width,
-                padding: EdgeInsets.symmetric(vertical: 15),
-                color: Colors.blue,
                 child: Text('PARK VIEW CLINIC',style: TextStyle(fontFamily:'Inter',
-                    color: Colors.black,fontSize: 25,fontWeight: FontWeight.bold),
+                    color: Colors.black,fontSize: 18,fontWeight: FontWeight.w400),
                     textAlign: TextAlign.center,
                 ),
               )

@@ -3,6 +3,8 @@ import 'package:doctor_app/home_screen.dart';
 import 'package:doctor_app/models/patient_details.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:async/async.dart';
+import 'package:path/path.dart';
 
 import '../api_error_handling.dart';
 import '../global_variables.dart';
@@ -141,49 +143,51 @@ class PatientApi {
     }
   }
 
-  // Future sendProfilePic(var image)async
-  // {
-  //   try{
-  //     print('yes');
-  //     var ret;
-  //     var stream = http.ByteStream(DelegatingStream.typed(image.openRead()));
-  //     var length = await image.length();
-  //
-  //     var uri = Uri.parse('${URL}updateprofile');
-  //
-  //     var request = new http.MultipartRequest("POST", uri);
-  //
-  //     var multipartFile = new http.MultipartFile('profile', stream, length,
-  //       filename: basename(image.path),);
-  //     //contentType: new MediaType('image', 'png'));
-  //
-  //     request.files.add(multipartFile);
-  //     print('yes1');
-  //     request.fields['patientID']=globalUserId.toString();
-  //     print('yes2');
-  //     //request.headers.addAll(headers);
-  //     var response = await request.send();
-  //     print('ressssyy:${response.statusCode}');
-  //     response.stream.transform(utf8.decoder).listen((value) {
-  //       print(value);
-  //       ret=value;
-  //     });
-  //
-  //     if(response.statusCode==200)
-  //     {
-  //       print('entered 200');
-  //       print(response);
-  //       print('ret${await ret}');
-  //       return await ret;
-  //     }
-  //     else{
-  //       throw 'error';
-  //     }
-  //   }
-  //   catch(e){
-  //     print(e);
-  //   }
-  // }
+  Future sendProfilePic(var image)async
+  {
+    try{
+      print('yes');
+      var ret;
+      var stream = http.ByteStream(DelegatingStream.typed(image.openRead()));
+      var length = await image.length();
+
+      var uri = Uri.parse('${URL}storeImage');
+
+      var request = http.MultipartRequest("POST", uri);
+
+      var multipartFile = http.MultipartFile('profile', stream, length,
+        filename: basename(image.path),);
+      //contentType: new MediaType('image', 'png'));
+
+      request.files.add(multipartFile);
+      print('yes1');
+      // request.fields['patientID']=globalUserId.toString();
+      print('yes2');
+      //request.headers.addAll(headers);
+      var response = await request.send();
+      print('ressssyy:${response.statusCode}');
+      response.stream.transform(utf8.decoder).listen((value) {
+        print(value);
+        ret=value;
+      });
+
+      if(response.statusCode==200)
+      {
+        print('entered 200');
+        print(response);
+        print('ret${await ret}');
+        return await ret;
+      }
+      else{
+        throw 'error';
+      }
+    }
+    catch(e){
+      print(e);
+    }
+  }
+
+
   //
   // Future getProfilePic(var context)async
   // {

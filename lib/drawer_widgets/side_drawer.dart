@@ -4,6 +4,7 @@ import 'package:doctor_app/login/login_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../local_storage_classes/secure_storage.dart';
+import 'receptionist/receptionist_page.dart';
 import 'vaccination/vaccination_page.dart';
 
 class SideDrawer extends StatefulWidget {
@@ -38,6 +39,8 @@ class _SideDrawerState extends State<SideDrawer> {
           //Navigator.pop(context);
           if(item=='Receptionist')
           {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (c) => ReceptionistPage()));
           }
           else if(item=='Vaccination Follow up')
           {

@@ -39,7 +39,6 @@ class _AddPatientState extends State<AddPatient> {
                 ],
               ),
             ),
-            AddPicture(type: 'add',),
             PatientForm(type:'add'),
           ],
         ),

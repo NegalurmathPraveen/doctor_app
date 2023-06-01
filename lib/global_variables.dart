@@ -26,3 +26,6 @@ final GlobalKey<FormState> scaffoldKey = GlobalKey<FormState>();
 
 List constList=[];//constant patient list
 List patientList = [];
+List receptionistList=[];
+var imageUrlList=[];
+List imageList=[];

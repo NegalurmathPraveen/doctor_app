@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
+import '../global_variables.dart';
+import 'add_patient/add_picture.dart';
 import 'add_patient/documents.dart';
 
 class PatientForm extends StatefulWidget {
@@ -21,6 +23,8 @@ class _PatientFormState extends State<PatientForm> {
   PatientApi patientApi=PatientApi();
   NotificationApis notificationApis=NotificationApis();
   var _formKey = GlobalKey<FormState>();
+  var picDetails;
+  var image;
   var first_name;
   var mid_name;
   var last_name;
@@ -123,7 +127,7 @@ class _PatientFormState extends State<PatientForm> {
     else
       {
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (c) => Documents(type:'add',body: body)));
+            .push(MaterialPageRoute(builder: (c) => Documents(type:'add',body: body,picDetails:picDetails)));
       }
 
   }
@@ -425,14 +429,31 @@ class _PatientFormState extends State<PatientForm> {
     );
   }
 
+  addPicFun(type,imageFile)
+  {
+    if(type=='profile')
+      {
+        image=imageFile;
+      }
+    picDetails={
+      'id':DateTime.now().toString(),
+      'first_name':first_name,
+      'mob_num':mob_num,
+      'profile_image':image,
+      'documents':imageList.toString()
+    };
+    print(picDetails);
+
+  }
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (ctx, constraint) {
       return Container(
-          height: MediaQuery.of(context).size.height * 0.6,
+          height: widget.type=='add'?MediaQuery.of(context).size.height * 0.8:MediaQuery.of(context).size.height * 0.6,
           margin: EdgeInsets.all(10),
           child: Column(
             children: [
+              widget.type=='add'?AddPicture(type: 'profile',name:first_name,mob_num:mob_num,fun:addPicFun):Container(),
               Form(
                   key: _formKey,
                   child: Container(
