@@ -5,6 +5,7 @@ class ReceptionistDetails{
   var whatsapp_num;
   var email;
   var password;
+  var status;
   var createdAt;
   var updatedAt;
   ReceptionistDetails({
@@ -14,6 +15,7 @@ class ReceptionistDetails{
      this.whatsapp_num,
      required this.email,
      required this.password,
+     required this.status,
      required this.createdAt,
      required this.updatedAt
 });

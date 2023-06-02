@@ -16,7 +16,7 @@ class _ProfileImageState extends State<ProfileImage> {
   @override
   void initState() {
     _streamImageList=_referenceProfileImage.snapshots();
-    print('list1:$_streamImageList');
+   // print('list1:$_streamImageList');
     super.initState();
   }
 
@@ -26,7 +26,7 @@ class _ProfileImageState extends State<ProfileImage> {
     return StreamBuilder<QuerySnapshot>(
       stream:_streamImageList,
       builder:(BuildContext context,AsyncSnapshot snapshot){
-        print('snap:$snapshot');
+        //print('snap:$snapshot');
         if(snapshot.hasError)
           {
             return  Container(
@@ -44,7 +44,7 @@ class _ProfileImageState extends State<ProfileImage> {
           {
               QuerySnapshot querySnapshot=snapshot.data;
               List<QueryDocumentSnapshot> listQueryDocumentSnapshot=querySnapshot.docs;
-              print('list0:$listQueryDocumentSnapshot');
+            //  print('list0:$listQueryDocumentSnapshot');
               return Container(
                 width:width*0.12,
                 decoration: BoxDecoration(

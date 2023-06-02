@@ -11,10 +11,9 @@ import '../../local_storage_classes/local_storage.dart';
 import '../patient_api.dart';
 class AddPicture extends StatefulWidget {
   var type;
-  var name;
-  var mob_num;
+  var profile_image;
   var fun;
-  AddPicture({required this.type,this.name,this.mob_num,this.fun});
+  AddPicture({required this.type,this.fun,this.profile_image});
 
   @override
   State<AddPicture> createState() => _AddPictureState();
@@ -181,8 +180,6 @@ class _AddPictureState extends State<AddPicture> {
           imageUrlList.add(imageUrl);
         }
       Map<String,String> dataToSend={
-        'id':widget.mob_num.toString(),
-        'first_name':widget.name.toString(),
         'profile_image':widget.type!='docs'?imageUrl.toString():'',
         'documents':widget.type=='docs'?imageUrlList.toString():''
       };
@@ -201,10 +198,12 @@ class _AddPictureState extends State<AddPicture> {
 
         if(widget.type=='docs')
         {
-          imageList.add(imageFile);
-          widget.fun('docs',imageFile);
-         // widget.fun(map);
-         // uploadTOFirebase();
+          setState(() {
+            imageList.add(imageFile);
+          });
+          print('entered here');
+          widget.fun();
+          print(imageList);
         }
         else
         {
@@ -278,29 +277,29 @@ class _AddPictureState extends State<AddPicture> {
       ):Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          widget.type=='update'?Container(
-            width: imageFile==null?width*0.35:null,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-                color: Colors.black12,
-                image: DecorationImage(image:AssetImage('assets/images/Image.png'),fit: BoxFit.cover)),
-            height: double.infinity,
-            child: ClipOval(
-              child: imageList.isEmpty?Container():imageLoading?Center(child: CircularProgressIndicator()):Image.file(
-                imageFile,
-                width:100,
-                height:170,
-                fit:BoxFit.cover,
-              ),
-            ),
-          ):
+          // widget.type=='update'?Container(
+          //   width: imageFile==null?width*0.40:null,
+          //   decoration: BoxDecoration(
+          //     shape: BoxShape.circle,
+          //       color: Colors.black12,
+          //       image: DecorationImage(image:widget.profile_image!=null?NetworkImage(widget.profile_image):AssetImage('assets/images/Image.png') as ImageProvider,fit: BoxFit.cover)),
+          //   height: double.infinity,
+          //   child: ClipOval(
+          //     child: imageList.isEmpty?Container():imageLoading?Center(child: CircularProgressIndicator()):Image.file(
+          //       imageFile,
+          //       width:100,
+          //       height:170,
+          //       fit:BoxFit.cover,
+          //     ),
+          //   ),
+          // ):
           Container(
             width: width*0.35,
             height: double.infinity,
             decoration: BoxDecoration(
                 shape: BoxShape.rectangle,
                 color: Colors.black12,
-                image: DecorationImage(image:AssetImage('assets/images/Image.png'),fit: BoxFit.cover)
+                image: DecorationImage(image:widget.profile_image!=null?NetworkImage(widget.profile_image):AssetImage('assets/images/Image.png') as ImageProvider,fit: BoxFit.cover)
             ),
             child: widget.type=='profile'?profileImage==null?Container():imageLoading?Center(child: CircularProgressIndicator()):Image.file(
               profileImage,

@@ -83,7 +83,7 @@ class _DocumentsUploadState extends State<DocumentsUpload> {
           //         fontWeight: FontWeight.bold),
           //     ),),),
           // execute?FilesPage(files: files, onOpenedFile:openFile):Container(),
-          AddPicture(type:'docs'),
+          AddPicture(type:'docs',),
         ],
       )
     );

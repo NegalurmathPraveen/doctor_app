@@ -1,6 +1,8 @@
+import 'package:doctor_app/drawer_widgets/receptionist/receptionist_api.dart';
 import 'package:flutter/material.dart';
 
 import 'add_receptionist.dart';
+import 'status_button.dart';
 
 class ReceptionistPage extends StatefulWidget {
   @override
@@ -9,7 +11,9 @@ class ReceptionistPage extends StatefulWidget {
 
 class _ReceptionistPageState extends State<ReceptionistPage> {
   ScrollController _scrollController = new ScrollController();
+  ReceptionistApis receptionistApis=ReceptionistApis();
   List receptionistList=[];
+
 
 
   Widget cardWidget(var response,var width,var height)
@@ -17,17 +21,18 @@ class _ReceptionistPageState extends State<ReceptionistPage> {
     return Card(
         margin: EdgeInsets.only(bottom: 10),
         child: ListTile(
+          trailing:StatusButton(status:response.status.toString()),
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(height:height*0.01,),
-              Text('Due date : ${response.due_date.toString()}',style:TextStyle(
+              Text('name : ${response.name.toString()}',style:TextStyle(
                   fontWeight: FontWeight.w400,
                   fontFamily: 'Inter',
                   fontSize: 17,color:Colors.blue),),
               SizedBox(height:height*0.01,),
-              Text('vaccination - ${response.id.toString()}',style: TextStyle(
+              Text('email - ${response.email.toString()}',style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Inter',
                   fontSize: 18,color:Color.fromRGBO(0, 0, 0, 0.87)),),
@@ -36,6 +41,18 @@ class _ReceptionistPageState extends State<ReceptionistPage> {
           ),
         )
     );
+  }
+  @override
+  void initState() {
+   getList();
+    super.initState();
+  }
+
+  getList()async
+  {
+    receptionistList=await receptionistApis.getAllReceptionistList(context);
+    print(receptionistList);
+    setState(() {});
   }
   @override
   Widget build(BuildContext context) {

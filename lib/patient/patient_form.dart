@@ -431,18 +431,17 @@ class _PatientFormState extends State<PatientForm> {
 
   addPicFun(type,imageFile)
   {
+    print('entered addpicfun');
     if(type=='profile')
       {
         image=imageFile;
       }
     picDetails={
-      'id':DateTime.now().toString(),
-      'first_name':first_name,
-      'mob_num':mob_num,
       'profile_image':image,
       'documents':imageList.toString()
     };
     print(picDetails);
+    return picDetails;
 
   }
   @override
@@ -453,7 +452,7 @@ class _PatientFormState extends State<PatientForm> {
           margin: EdgeInsets.all(10),
           child: Column(
             children: [
-              widget.type=='add'?AddPicture(type: 'profile',name:first_name,mob_num:mob_num,fun:addPicFun):Container(),
+              widget.type=='add'?AddPicture(type: 'profile',fun:addPicFun):Container(),
               Form(
                   key: _formKey,
                   child: Container(

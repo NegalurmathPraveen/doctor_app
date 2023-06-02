@@ -51,9 +51,9 @@ class ReceptionistApis{
       if (Response.statusCode == 200) {
         print(response);
         if (response['status'] == 'success') {
-          receptionistList = convertListToReceptionistModel(response['receptionist_list']['data']);
+          receptionistList = convertListToReceptionistModel(response['receptionist_list']);
           print('length${patientList.length}');
-          return patientList;
+          return receptionistList;
         }
         else {
           showSnackBar.showToast('something went wrong!', context);
@@ -79,6 +79,7 @@ class ReceptionistApis{
               name: element['name'],
               email:element['email'],
               password:element['password'],
+              status:element['status'],
               createdAt: element['createdAt'],
               updatedAt: element['updatedAt']
           ));

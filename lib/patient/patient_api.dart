@@ -18,11 +18,39 @@ class PatientApi {
   ShowSnackBar showSnackBar = ShowSnackBar();
   ApiErrorHandling apiErrorHandling = ApiErrorHandling();
 
-  Future submitPatientDetails(var body, var context) async {
+  Future submitPatientDetails(var body,var images, var context) async {
     try {
+      if(images!=null)
+        {
+          if(images['profile_image']==null && images['documents']!=null)
+            {
+              body['pat_image']=null;
+              body['documents']=images['documents'];
+            }
+          else if(images['profile_image']!=null && images['documents']==null)
+          {
+            body['pat_image']=images['profile_image'];
+            body['documents']=null;
+          }
+          else
+            {
+              body['pat_image']=images['profile_image'];
+              print(body['pat_image']);
+              body['documents']=images['documents'];
+              print(body['documents']);
+            }
+        }
+     else
+       {
+         body['pat_image']=null;
+         print(body['pat_image']);
+         body['documents']=null;
+         print(body['documents']);
+       }
+
       var url = Uri.parse(URL + 'submitPatientDetails');
       print(url);
-      print(body);
+      print(json.encode(body));
       var Response = await http.post(url, body: json.encode(body), headers: {
         'content-Type': 'application/json',
       });
@@ -31,9 +59,6 @@ class PatientApi {
         if (response['status'] == 'success') {
           print(response['status']);
           showSnackBar.showToast('added patient successfully!', context);
-          Navigator.pushAndRemoveUntil(
-              context, MaterialPageRoute(builder: (c) => HomeScreen()), (
-              Route<dynamic> route) => false);
         }
         else {
           showSnackBar.showToast('something went wrong!', context);
@@ -58,6 +83,7 @@ class PatientApi {
       if (Response.statusCode == 200) {
         print(response);
         if (response['status'] == 'success') {
+         // page=response['last_page'];
              patientList = patientList+convertListToPatientModel(response['patient_list']['data']);
           print('length${patientList.length}');
           return patientList;
@@ -76,7 +102,30 @@ class PatientApi {
     }
   }
 
-
+  Future getLastPage(var context) async {
+    try {
+      var url = Uri.parse(URL + 'getLastPage');
+      print(url);
+      var Response = await http.post(url);
+      var response = json.decode(Response.body);
+      if (Response.statusCode == 200) {
+        print(response);
+        if (response['status'] == 'success') {
+           page=response['last_page'];
+        }
+        else {
+          showSnackBar.showToast('something went wrong!', context);
+          return false;
+        }
+      }
+      else {
+        apiErrorHandling.apiErrorHandlerFun(Response.statusCode, context);
+        throw response;
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
   convertListToPatientModel(List list) {
     var patList = [];
     list.forEach((element) {
@@ -108,6 +157,8 @@ class PatientApi {
               referred_by: element['referred_by'],
               sec_num_type: element['sec_num_type'],
               significant_history: element['significant_history'],
+              pat_image: element['pat_image'],
+              documents: element['documents'],
               createdAt: element['createdAt'],
               updatedAt: element['updatedAt']
           ));

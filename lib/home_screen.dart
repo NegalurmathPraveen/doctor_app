@@ -68,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           isLoadingMore=true;
         });
-        page=page+1;
+        page=page-1;
         await patientApi.getAllPatientsList(page,context);
         constList=List.from(patientList);
         setState(() {

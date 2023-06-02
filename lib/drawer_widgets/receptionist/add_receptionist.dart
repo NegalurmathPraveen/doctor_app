@@ -124,7 +124,8 @@ class _AddReceptionistState extends State<AddReceptionist> {
       "mobile_number":mobile,
       "whatsapp_number":whatsapp,
       "email":email,
-      "password":password
+      "password":password,
+      "status":'active'
     };
     if(widget.type=='add')
       {

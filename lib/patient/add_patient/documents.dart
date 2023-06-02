@@ -1,19 +1,23 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:doctor_app/home_screen.dart';
 import 'package:doctor_app/notifications/notifications_api.dart';
 import 'package:doctor_app/patient/patient_api.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
+import '../../global_variables.dart';
 import '../patient_details/documents_display.dart';
 import 'add_picture.dart';
 import 'documents_upload.dart';
 class Documents extends StatefulWidget {
   var type;
   var body;
+  var subType;
+  var docs;
   var picDetails;
-  Documents({required this.type,this.body,this.picDetails});
+  Documents({required this.type,this.body,this.subType,this.docs,this.picDetails});
 
   @override
   State<Documents> createState() => _DocumentsState();
@@ -22,9 +26,8 @@ class Documents extends StatefulWidget {
 class _DocumentsState extends State<Documents> {
 PatientApi patientApi=PatientApi();
 NotificationApis notificationApis=NotificationApis();
-
+var dataToSend;
 var profile;
-var imageList=[];
 var docsList=[];
 var loading=false;
 
@@ -32,35 +35,58 @@ CollectionReference _reference=FirebaseFirestore.instance.collection('patient_li
 
   submitPatientDetails()async
   {
-    upload();
-    var res=await patientApi.submitPatientDetails(widget.body, context).then((value)async{
-      var body={
-        'heading':'New Patient Added',
-        'content':widget.body['first_name'],
-        'sub_heading':'Age - ${widget.body['age']}'
-      };
-      var response=await notificationApis.addNotification(body, context);
-    setState(() {
-      loading=false;
-    });
-    }
+    var val1=await upload().then((value)async{
+      var val=await patientApi.submitPatientDetails(widget.body,dataToSend, context).then((value)async{
+        var body={
+          'heading':'New Patient Added',
+          'content':widget.body['first_name'],
+          'sub_heading':'Age - ${widget.body['age']}'
+        };
+        var response=await notificationApis.addNotification(body, context).then((value){
+          setState(() {
+            imageUrlList.clear();
+            imageList.clear();
+            loading=false;
+          });
 
-    );
+          Navigator.pushAndRemoveUntil(
+              context, MaterialPageRoute(builder: (c) => HomeScreen()), (
+              Route<dynamic> route) => false);
+        });
+        });
+
+
+    });
+
+
+
+
+
   }
 
-  upload()
+  Future upload()async
   {
     setState(() {
       loading=true;
     });
-    uploadTOFirebase('profile',widget.picDetails['profile_image']).then((value) {
-      uploadTOFirebase('docs',widget.picDetails['profile_image']);
+    await uploadTOFirebase('profile',widget.picDetails!=null?widget.picDetails['profile_image']:null).then((value)async{
+      print('imagelist:$imageList');
+      if(imageList.isNotEmpty)
+        {
+          for(int i=0;i<imageList.length;i++)
+          {
+            await uploadTOFirebase('docs',imageList[i]);
+          }
+        }
     } );
 
   }
 
 Future uploadTOFirebase(type,image)async
 {
+  if(image==null){
+    return null;
+  }
   String uniqueFileName=DateTime.now().millisecondsSinceEpoch.toString();
   //get a reference to storage root
   Reference referenceRoot=FirebaseStorage.instance.ref();
@@ -80,25 +106,44 @@ Future uploadTOFirebase(type,image)async
     if(type=='profile')
       {
         profile=imageUrl;
+        print('profile: $profile');
       }
     else{
-      imageList.add(imageUrl);
+      imageUrlList.add(imageUrl);
+      print('imageUrlList:$imageUrlList');
     }
     print('imageurl:$imageUrl');
+    if(imageList.indexOf(image)==imageList.length-1)
+      {
+        print('hero');
+        print(imageList.indexOf(image));
+        print(imageList.length-1);
 
-    // Map<String,String> dataToSend={
-    //   'id':widget.mob_num.toString(),
-    //   'first_name':widget.name.toString(),
-    //   'profile_image':imageUrl.toString(),
-    //   'documents':''
-    // };
+         dataToSend={
+          'id':widget.body['mob_num'].toString(),
+          'first_name':widget.body['first_name'].toString(),
+          'profile_image':imageUrl.toString(),
+          'documents':imageUrlList.toString()
+        };
+        print(dataToSend);
+        //_reference.add(dataToSend);
+      }
+
    // print(dataToSend);
-  widget.picDetails['documents']='';
-    _reference.add(widget.picDetails);
+  //widget.picDetails['documents']='';
+
+
   }catch(error)
   {
     print(error);
   }
+}
+addPicFun()
+{
+  print('entered addpicfun');
+  return widget.picDetails['documents']=imageList;
+
+
 }
   textButton()
   {
@@ -106,7 +151,6 @@ Future uploadTOFirebase(type,image)async
       // height: 75,
       //minWidth: 1000,
       onPressed: (){
-
           submitPatientDetails();
         },
       child: Container(
@@ -117,7 +161,7 @@ Future uploadTOFirebase(type,image)async
             color: Color.fromRGBO(1, 127, 251, 1),
             borderRadius: BorderRadius.circular(5)),
         child: Text(
-          'CONFIRM',
+          widget.type=='add' && widget.subType==null?'CONFIRM':'UPDATE',
           style: TextStyle(
               color: Colors.white,
               fontSize: 18,
@@ -129,24 +173,27 @@ Future uploadTOFirebase(type,image)async
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar:widget.type=='add'?AppBar(title: Text('Documents',style: Theme.of(context).textTheme.headline3,),):null,
-      body: Column(children: [
-        Container(
-          padding: EdgeInsets.all(15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Details', style: Theme.of(context).textTheme.headline1),
-              widget.type!='add'?Container():Text(
-                'Page 2 of 2',
-                style: Theme.of(context).textTheme.headline3,
-              ),
-            ],
+        appBar:widget.type=='add'?widget.subType==null?AppBar(title: Text('Documents',style: Theme.of(context).textTheme.headline3,),):null:null,
+      body: SingleChildScrollView(
+        child: Column(children: [
+          Container(
+            padding: EdgeInsets.all(15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Details', style: Theme.of(context).textTheme.headline1),
+                widget.type!='add'?widget.subType!=null?Container():Text(
+                  'Page 2 of 2',
+                  style: Theme.of(context).textTheme.headline3,
+                ):Container(),
+              ],
+            ),
           ),
-        ),
-        widget.type=='add'?AddPicture(type:'docs'):DocumentsDisplay(),
-        textButton()
-      ],),
+          widget.type=='add' && widget.subType==null?Container():DocumentsDisplay(docs:widget.docs),
+          AddPicture(type:'docs',fun: addPicFun),
+          textButton()
+        ],),
+      ),
     );
   }
 }

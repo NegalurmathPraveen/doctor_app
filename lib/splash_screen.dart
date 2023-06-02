@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:doctor_app/home_screen.dart';
+import 'package:doctor_app/patient/patient_api.dart';
 
 import 'local_storage_classes/secure_storage.dart';
 import 'package:flutter/material.dart';
@@ -17,13 +18,18 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   SecureStorage secureStorage=SecureStorage();
+  PatientApi patientApi=PatientApi();
   @override
   void initState() {
 
     checkUserCreds();
+    setLastPage();
     super.initState();
   }
-
+  setLastPage()async
+  {
+    await patientApi.getLastPage(context);
+  }
   checkUserCreds()async{
      await Future.delayed(Duration(seconds: 3));
    // await secureStorage.deleteSecureData('doctorDetails');

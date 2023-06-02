@@ -235,11 +235,8 @@ topText(var text)
 
                             loginApi.login(email.text,_passwordController.text,context).then((value){
                               print('value:$value');
-                              if(value)
-                                {
-                                  Navigator.of(context).push(MaterialPageRoute(
+                              Navigator.of(context).push(MaterialPageRoute(
                                   builder: (c) =>HomeScreen()));
-                                }
                             }
                             );}
                         },

@@ -1,6 +1,7 @@
 import 'package:doctor_app/patient/add_patient/documents.dart';
 import 'package:flutter/material.dart';
 
+import '../../global_variables.dart';
 import '../add_patient/add_picture.dart';
 import '../patient_form.dart';
 import 'visitation/visitation_page.dart';
@@ -15,6 +16,23 @@ class PatientDetailsPage extends StatefulWidget {
 
 class _PatientDetailsPageState extends State<PatientDetailsPage> {
   var edit=true;
+ var image;
+ var picDetails;
+  addPicFun(type,imageFile)
+  {
+    print('entered addpicfun');
+    if(type=='profile')
+    {
+      image=imageFile;
+    }
+    picDetails={
+      'profile_image':image,
+      'documents':imageList.toString()
+    };
+    print(picDetails);
+    return picDetails;
+
+  }
   @override
   Widget build(BuildContext context) {
     var height=MediaQuery.of(context).size.height;
@@ -54,12 +72,12 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
                       ),
                     ],
                   ),
-                  AddPicture(type:'update'),
+                  AddPicture(type:'profile',profile_image:widget.patDetails.pat_image,fun:addPicFun,),
                   PatientForm(type:'update',patDetails: widget.patDetails,edit:edit),
                 ],
               ),
             ),
-            Documents(type:'update'),
+            Documents(type:'add',subType:'view',docs:widget.patDetails.documents),
             VisitationPage(patDetails:widget.patDetails,)
           ],
         ),
