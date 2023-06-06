@@ -54,12 +54,15 @@ var count=1;
            if(title=='pdf')
              {
                print('entered');
-               var data = await pdfDocument.createHelloWorld(widget.patDetails);
-               await pdfDocument.savePdfFile("Pdf :$count",data).then((value) {
-                 print(value.path);
-                return OpenFile.open(value.path);
-               });
-               count++;
+               final pdfFile = await pdfDocument.createHelloWorld(widget.patDetails);
+               print(pdfFile);
+               pdfDocument.openFile(pdfFile);
+               // await pdfDocument.savePdfFile("Pdf :$count",data).then((value) {
+               //   print(value.path);
+               //   count++;
+               //  return OpenFile.open(value.path);
+               // });
+
              }
            else
              {

@@ -35,14 +35,14 @@ class PdfDocument {
 }
 
 
-  Future<Uint8List> createHelloWorld(var patDetails) async{
+  Future<File> createHelloWorld(var patDetails) async{
     var data = await rootBundle.load("assets/fonts/Roboto-Regular.ttf");
     var myFont = Font.ttf(data);
     var myStyle = pw.TextStyle(font: myFont);
     final pdf = pw.Document();
-    // final image = (await rootBundle.load("assets/images/jeevini_logo.png"))
-    //     .buffer
-    //     .asUint8List();
+    final image = (await rootBundle.load("assets/icon/icon.jpeg"))
+        .buffer
+        .asUint8List();
     pdf.addPage(
       pw.Page(
         pageFormat: PdfPageFormat.a4,
@@ -53,18 +53,19 @@ class PdfDocument {
         },
       ),
     );
-    return pdf.save();
+    return savePdfFile('invoice',pdf);
   }
- Future<File> savePdfFile(String fileName, Uint8List byteList) async {
-   print('entry');
-   final output = await getTemporaryDirectory();
-   var filePath = "${output.path}/$fileName.pdf";
-   print(filePath);
-   final file = File(filePath);
-
-   await file.writeAsBytes(byteList.buffer.asUint8List(), flush: true);
+ Future<File> savePdfFile(String fileName,Document pdf) async {
+   final bytes=await pdf.save();
+   final dir=await getApplicationDocumentsDirectory();
+   final file=File('${dir.path}/$fileName.pdf');
+   await file.writeAsBytes(bytes);
    return file;
-   //await OpenDocument.openDocument(filePath: filePath);
+ }
+
+ Future openFile(File file)async{
+   final url=file.path;
+   await OpenFile.open(url);
  }
 
 }
