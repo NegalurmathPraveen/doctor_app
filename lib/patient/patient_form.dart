@@ -23,6 +23,7 @@ class _PatientFormState extends State<PatientForm> {
   PatientApi patientApi=PatientApi();
   NotificationApis notificationApis=NotificationApis();
   var _formKey = GlobalKey<FormState>();
+  var noDob=false;
   var picDetails;
   var image;
   var first_name;
@@ -64,7 +65,17 @@ class _PatientFormState extends State<PatientForm> {
         print('entered');
         if (isValid) {
           _formKey.currentState!.save();
-          submitDetails();
+          if(dob.toString().isEmpty)
+            {
+              setState(() {
+                noDob=true;
+              });
+            }
+          else
+            {
+              submitDetails();
+            }
+
         }
       },
       child: Container(
@@ -115,7 +126,8 @@ class _PatientFormState extends State<PatientForm> {
     if(widget.type=='update')
       {
         print('entered update');
-          var res=patientApi.updatePatientDetails(body, context).then((value)async{
+
+          var res=patientApi.updatePatientDetails(widget.patDetails,body, context).then((value)async{
             var notbody={
               'heading':'Patient Edited',
               'content':first_name.toString(),
@@ -471,7 +483,7 @@ class _PatientFormState extends State<PatientForm> {
                             ],
                             3,true),
                         textFields('age_group', null, null,false),
-                        textFields('dob', null, null,false),
+                        textFields('dob', null, null,true),
                         dropdown('blood_group', setState), //dropdown
                         textFields(
                             'mob_num',
@@ -517,7 +529,13 @@ class _PatientFormState extends State<PatientForm> {
                       ]),
                     ),
                   )),
-              textButton()
+              textButton(),
+              noDob?Text('* no date of birth',style: TextStyle(
+                fontFamily: 'Roboto',
+                fontWeight: FontWeight.w500,
+                fontSize: 18,
+                color: Colors.red,
+              ),):Container()
             ],
           ));
     });

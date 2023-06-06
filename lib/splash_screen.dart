@@ -32,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
   checkUserCreds()async{
      await Future.delayed(Duration(seconds: 3));
-   // await secureStorage.deleteSecureData('doctorDetails');
+     //await secureStorage.deleteSecureData('doctorDetails');
      var res=await secureStorage.readSecureData('doctorDetails');
 
     if(res==null)

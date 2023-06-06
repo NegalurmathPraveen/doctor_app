@@ -138,22 +138,26 @@ class _AddPictureState extends State<AddPicture> {
       // });
       imageFile = File(pickedFile.path);
       print('file:$imageFile');
-      setState(() {
-        if(widget.type=='docs')
-        {
+      if(widget.type=='docs')
+      {
+        setState(() {
           imageList.add(imageFile);
-        }
-        else
-        {
-          imageList.clear();
-          imageList.add(imageFile);
-          profileImage=imageFile;
-        }
-      });
-      setState(() {
+        });
+        print('entered here');
+        widget.fun();
+        print(imageList);
+      }
+      else
+      {
+        // imageList.clear();
+        // imageList.add(imageFile);
+        profileImage=imageFile;
+        widget.fun('profile',imageFile);
+        // uploadTOFirebase();
+      }
+      setState((){
         imageLoading=false;
       });
-
     }
   }
   uploadTOFirebase()async

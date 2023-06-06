@@ -210,7 +210,6 @@ topText(var text)
                       maxLengthEnforcement: MaxLengthEnforcement.enforced,
                       onChanged: (text){setState(() {
                       });},
-                      maxLength: 10,
                       controller: _passwordController,
                     ),
                   ),
@@ -235,8 +234,11 @@ topText(var text)
 
                             loginApi.login(email.text,_passwordController.text,context).then((value){
                               print('value:$value');
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (c) =>HomeScreen()));
+                              if(value)
+                                {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (c) =>HomeScreen()));
+                                }
                             }
                             );}
                         },

@@ -25,7 +25,8 @@ class PatientApi {
           if(images['profile_image']==null && images['documents']!=null)
             {
               body['pat_image']=null;
-              body['documents']=images['documents'];
+             // body['documents']=images['documents'].toString().replaceAll('[', '').replaceAll(']','');
+              body['documents']=json.encode(images['documents']);
             }
           else if(images['profile_image']!=null && images['documents']==null)
           {
@@ -36,7 +37,8 @@ class PatientApi {
             {
               body['pat_image']=images['profile_image'];
               print(body['pat_image']);
-              body['documents']=images['documents'];
+              //body['documents']=images['documents'].toString().replaceAll('[', '').replaceAll(']','');
+              body['documents']=json.encode(images['documents']);
               print(body['documents']);
             }
         }
@@ -112,6 +114,7 @@ class PatientApi {
         print(response);
         if (response['status'] == 'success') {
            page=response['last_page'];
+           // page=435;
         }
         else {
           showSnackBar.showToast('something went wrong!', context);
@@ -166,8 +169,10 @@ class PatientApi {
     return patList;
   }
 
-  Future updatePatientDetails(var body, var context) async {
+  Future updatePatientDetails(var details, var body, var context) async {
     try {
+      body['pat_image']=details.pat_image;
+      body['documents']=details.documents;
       var url = Uri.parse(URL + 'editPatientProfile');
       print(url);
       print(json.encode(body));
@@ -194,93 +199,8 @@ class PatientApi {
     }
   }
 
-  Future sendProfilePic(var image)async
+  uploadUpdatedPatProfilePic(var id,var imageUrl)
   {
-    try{
-      print('yes');
-      var ret;
-      var stream = http.ByteStream(DelegatingStream.typed(image.openRead()));
-      var length = await image.length();
 
-      var uri = Uri.parse('${URL}storeImage');
-
-      var request = http.MultipartRequest("POST", uri);
-
-      var multipartFile = http.MultipartFile('profile', stream, length,
-        filename: basename(image.path),);
-      //contentType: new MediaType('image', 'png'));
-
-      request.files.add(multipartFile);
-      print('yes1');
-      // request.fields['patientID']=globalUserId.toString();
-      print('yes2');
-      //request.headers.addAll(headers);
-      var response = await request.send();
-      print('ressssyy:${response.statusCode}');
-      response.stream.transform(utf8.decoder).listen((value) {
-        print(value);
-        ret=value;
-      });
-
-      if(response.statusCode==200)
-      {
-        print('entered 200');
-        print(response);
-        print('ret${await ret}');
-        return await ret;
-      }
-      else{
-        throw 'error';
-      }
-    }
-    catch(e){
-      print(e);
-    }
   }
-
-
-  //
-  // Future getProfilePic(var context)async
-  // {
-  //   try{
-  //     LocalStorage localStorage= LocalStorage(path1:'profileImage.json');
-  //     //SecureStorage secureStorage=SecureStorage();
-  //     var url2;
-  //     String url1='${URL}viewprofile?patientID=$globalUserId';
-  //     var url = Uri.parse(url1);
-  //     var response=await http.get(url,headers: {
-  //       'content-Type' : 'application/x-www-form-urlencoded',
-  //       'token': '${globalBtoken}',
-  //     });
-  //     print(response.body);
-  //     if(response.statusCode==200)
-  //     {
-  //       var x=response.body.toString();
-  //       final text = x;
-  //
-  //       // RegExp exp = new RegExp(r'(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+');
-  //       // Iterable<RegExpMatch> matches = exp.allMatches(text);
-  //       // matches.forEach((match) {
-  //       //   print('url2:${text.substring(match.start, match.end)}');
-  //       //    url2=text.substring(match.start, match.end);
-  //       // });
-  //       url2=response.body;
-  //       print('x=$x');
-  //       print('url2$url2');
-  //       await localStorage.writeData(json.encode(url2.toString()));
-  //       var image4=await localStorage.readData();
-  //       print('image4:$image4');
-  //
-  //
-  //       return image4;
-  //     }
-  //     else{
-  //       apiErrorHandling.apiErrorHandlerFun(response.statusCode,context);
-  //       throw 'error';
-  //     }
-  //   }
-  //   catch(e){
-  //     print(e);
-  //   }
-  // }
 }

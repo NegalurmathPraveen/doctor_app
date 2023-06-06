@@ -1,4 +1,4 @@
-package com.example.doctor_app
+package com.park_view.doctor
 
 import io.flutter.embedding.android.FlutterActivity
 

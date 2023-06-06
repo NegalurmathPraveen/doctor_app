@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const String URL = "http://10.0.2.2:8000/api/";
+const String URL = "http://laconicpharma.com/doctor_app_apis-master/public/api/";
 
 final int patientId=0;
 bool newUser=true;
@@ -22,7 +22,7 @@ var writeCount=0;
 var directory;
 
 //scaffold key
-final GlobalKey<FormState> scaffoldKey = GlobalKey<FormState>();
+GlobalKey<FormState> scaffoldKey = GlobalKey<FormState>();
 
 List constList=[];//constant patient list
 List patientList = [];

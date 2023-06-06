@@ -66,7 +66,7 @@ class _NotificationPageState extends State<NotificationPage> {
         ),
       body: SingleChildScrollView(
         child: Container(
-          height:height*0.7,
+          height:double.maxFinite,
           child: notificationsList.isEmpty?Center(child: Text('Oopss!! Notifications list is empty',style: Theme.of(context).textTheme.headline2,)):ListView(
             controller: _scrollController,
             children: notificationsList.map((response) => cardWidget(response,width,height)).toList(),

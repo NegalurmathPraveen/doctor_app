@@ -1,9 +1,12 @@
 import 'package:doctor_app/patient/add_patient/documents.dart';
 import 'package:flutter/material.dart';
+import 'package:open_document/my_files/init.dart';
+import 'package:open_file/open_file.dart';
 
 import '../../global_variables.dart';
 import '../add_patient/add_picture.dart';
 import '../patient_form.dart';
+import 'pdf/pdf_document.dart';
 import 'visitation/visitation_page.dart';
 
 class PatientDetailsPage extends StatefulWidget {
@@ -15,6 +18,8 @@ class PatientDetailsPage extends StatefulWidget {
 }
 
 class _PatientDetailsPageState extends State<PatientDetailsPage> {
+  PdfDocument pdfDocument=PdfDocument();
+var count=1;
   var edit=true;
  var image;
  var picDetails;
@@ -33,6 +38,41 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
     return picDetails;
 
   }
+
+  editButton(title,height)
+  {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Container(
+          height:height*0.05,
+          margin: EdgeInsets.all(10),
+          decoration: BoxDecoration(border:Border.all(color: Colors.blue)),
+          alignment: Alignment.centerRight,
+          padding: EdgeInsets.zero,
+          child: IconButton(icon: title=='pdf'?Icon(Icons.picture_as_pdf_outlined,color: Colors.blue,size: 25,):Icon(Icons.edit,color: Colors.blue,size: 25,),onPressed: ()async{
+           if(title=='pdf')
+             {
+               print('entered');
+               var data = await pdfDocument.createHelloWorld(widget.patDetails);
+               await pdfDocument.savePdfFile("Pdf :$count",data).then((value) {
+                 print(value.path);
+                return OpenFile.open(value.path);
+               });
+               count++;
+             }
+           else
+             {
+               setState(() {
+                 edit=!edit;
+               });
+             }
+
+          },),
+        ),
+      ],
+    );
+  }
   @override
   Widget build(BuildContext context) {
     var height=MediaQuery.of(context).size.height;
@@ -41,6 +81,7 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
+          actions: [editButton('pdf',height),editButton('edit',height)],
           bottom:TabBar(
             tabs: [
               Tab(child: Text('Details',style: Theme.of(context).textTheme.headline4,)),
@@ -55,23 +96,6 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
             SingleChildScrollView(
               child: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Container(
-                        height:height*0.05,
-                        margin: EdgeInsets.all(10),
-                        decoration: BoxDecoration(border:Border.all(color: Colors.blue)),
-                        alignment: Alignment.centerRight,
-                        padding: EdgeInsets.zero,
-                        child: IconButton(icon: Icon(Icons.edit,color: Colors.blue,size: 25,),onPressed: (){
-                          setState(() {
-                            edit=!edit;
-                          });
-                        },),
-                      ),
-                    ],
-                  ),
                   AddPicture(type:'profile',profile_image:widget.patDetails.pat_image,fun:addPicFun,),
                   PatientForm(type:'update',patDetails: widget.patDetails,edit:edit),
                 ],

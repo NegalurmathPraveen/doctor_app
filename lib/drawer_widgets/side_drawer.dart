@@ -57,8 +57,8 @@ class _SideDrawerState extends State<SideDrawer> {
           }
           else if(item=='Logout')
           {
-            await secureStorage.deleteSecureData('doctorDetails');
-            Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (c) => LoginScreen()), (Route<dynamic> route) => false);
+            await secureStorage.deleteSecureData('doctorDetails').then((value) => Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (c) => LoginScreen()), (Route<dynamic> route) => false));
+
           }
         },
             child:Text(item,style: Theme.of(context).textTheme.headline3,textAlign: TextAlign.center,))

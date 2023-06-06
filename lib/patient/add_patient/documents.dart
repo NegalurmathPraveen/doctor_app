@@ -123,7 +123,7 @@ Future uploadTOFirebase(type,image)async
           'id':widget.body['mob_num'].toString(),
           'first_name':widget.body['first_name'].toString(),
           'profile_image':imageUrl.toString(),
-          'documents':imageUrlList.toString()
+          'documents':imageUrlList
         };
         print(dataToSend);
         //_reference.add(dataToSend);
@@ -131,8 +131,6 @@ Future uploadTOFirebase(type,image)async
 
    // print(dataToSend);
   //widget.picDetails['documents']='';
-
-
   }catch(error)
   {
     print(error);
