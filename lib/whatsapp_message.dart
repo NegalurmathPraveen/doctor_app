@@ -13,7 +13,7 @@ class WhatsappMsg{
 
   Future whatsappMsg(var details,var context) async {
     try {
-      var url = Uri.parse('http://private.itswhatsapp.com/wapp/api/send?apikey=7e82684d8ab64de4a063b5cc5d1bd27d&mobile=${details['mobile_nos'].toString()}&msg=test_msg');
+      var url = Uri.parse('http://private.itswhatsapp.com/wapp/api/send?apikey=2bed3bbbdb7941e5b7b41ce5cf0c1ff4&mobile=${details['mobile_nos'].toString()}&msg=you have your followup scheduled tomorrow');
       print(url);
       var Response = await http.post(url);
       var response = json.decode(Response.body);

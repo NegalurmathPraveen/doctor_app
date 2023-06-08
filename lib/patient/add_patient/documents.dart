@@ -188,8 +188,8 @@ addPicFun()
             ),
           ),
           widget.type=='add' && widget.subType==null?Container():DocumentsDisplay(docs:widget.docs),
-          AddPicture(type:'docs',fun: addPicFun),
-          textButton()
+          widget.type=='add' && widget.subType==null?AddPicture(type:'docs',fun: addPicFun):Container(),
+          widget.type=='add' && widget.subType==null?textButton():Container()
         ],),
       ),
     );

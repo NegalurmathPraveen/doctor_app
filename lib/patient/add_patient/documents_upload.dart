@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:doctor_app/patient/add_patient/files_page.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:open_file/open_file.dart';
+import 'package:open_file_plus/open_file_plus.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'add_picture.dart';
@@ -24,11 +24,6 @@ class _DocumentsUploadState extends State<DocumentsUpload> {
    var newFile;
 
 
-   void openFile(var filee)
-   {
-     print('running');
-     OpenFile.open(filee.path!);
-   }
 
    saveFilePermanently(var file)async
    {

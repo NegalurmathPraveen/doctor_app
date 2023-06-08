@@ -89,7 +89,7 @@ class ReceptionistApis{
 
   Future updateReceptionistDetails(var body, var context) async {
     try {
-      var url = Uri.parse(URL + 'editReceptionistProfile');
+      var url = Uri.parse(URL +'editReceptionistProfile');
       print(url);
       print(json.encode(body));
       var Response = await http.post(url, body: json.encode(body), headers: {
@@ -99,7 +99,7 @@ class ReceptionistApis{
       if (Response.statusCode == 200) {
         if (response['status'] == 'success') {
           print(response['status']);
-          showSnackBar.showToast('updated patient details successfully!', context);
+          showSnackBar.showToast('updated status successfully!', context);
         }
         else {
           showSnackBar.showToast('something went wrong!', context);
@@ -114,4 +114,33 @@ class ReceptionistApis{
       print(error);
     }
   }
+
+  // editStatus(var status)async
+  // {
+  //   try {
+  //     var url = Uri.parse(URL + 'editReceptionistProfile');
+  //     print(url);
+  //     print(json.encode(body));
+  //     var Response = await http.post(url, body: json.encode(body), headers: {
+  //       'content-Type': 'application/json',
+  //     });
+  //     var response = json.decode(Response.body);
+  //     if (Response.statusCode == 200) {
+  //       if (response['status'] == 'success') {
+  //         print(response['status']);
+  //         showSnackBar.showToast('updated patient details successfully!', context);
+  //       }
+  //       else {
+  //         showSnackBar.showToast('something went wrong!', context);
+  //         return false;
+  //       }
+  //     }
+  //     else {
+  //       apiErrorHandling.apiErrorHandlerFun(Response.statusCode, context);
+  //       throw response;
+  //     }
+  //   } catch (error) {
+  //     print(error);
+  //   }
+  // }
 }

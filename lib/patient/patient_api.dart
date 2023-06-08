@@ -114,7 +114,7 @@ class PatientApi {
         print(response);
         if (response['status'] == 'success') {
            page=response['last_page'];
-           // page=435;
+           //page=434;
         }
         else {
           showSnackBar.showToast('something went wrong!', context);
@@ -169,9 +169,9 @@ class PatientApi {
     return patList;
   }
 
-  Future updatePatientDetails(var details, var body, var context) async {
+  Future updatePatientDetails(var details,var picDetails,var body, var context) async {
     try {
-      body['pat_image']=details.pat_image;
+      body['pat_image']=picDetails['profile_image'].toString()!=null?picDetails['profile_image']:details.pat_image;
       body['documents']=details.documents;
       var url = Uri.parse(URL + 'editPatientProfile');
       print(url);

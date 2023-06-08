@@ -17,8 +17,12 @@ class _DocumentsDisplayState extends State<DocumentsDisplay> {
   @override
   void initState() {
     super.initState();
-    imageList = json.decode(widget.docs);
-    print(imageList);
+    if(widget.docs.toString()!='null')
+      {
+        imageList = json.decode(widget.docs);
+        print(imageList);
+      }
+
 
   }
 
@@ -42,7 +46,11 @@ class _DocumentsDisplayState extends State<DocumentsDisplay> {
     return Container(
       height:height*0.4,
       width: double.infinity,
-      child: GridView.builder(
+      child: imageList.length==0?Center(
+        child: Container(
+          child: Text('no documents',style: Theme.of(context).textTheme.headline3,),
+        ),
+      ):GridView.builder(
           gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
           itemCount:imageList.length,
           itemBuilder:(context,index){

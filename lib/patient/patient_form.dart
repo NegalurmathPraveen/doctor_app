@@ -73,6 +73,9 @@ class _PatientFormState extends State<PatientForm> {
             }
           else
             {
+              setState(() {
+                noDob=false;
+              });
               submitDetails();
             }
 
@@ -80,7 +83,7 @@ class _PatientFormState extends State<PatientForm> {
       },
       child: Container(
         height: MediaQuery.of(context).size.height * 0.05,
-        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        //margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         alignment: Alignment.center,
         decoration: BoxDecoration(
             color: Color.fromRGBO(1, 127, 251, 1),
@@ -126,14 +129,13 @@ class _PatientFormState extends State<PatientForm> {
     if(widget.type=='update')
       {
         print('entered update');
-
-          var res=patientApi.updatePatientDetails(widget.patDetails,body, context).then((value)async{
+          var res=patientApi.updatePatientDetails(widget.patDetails,picDetails,body, context).then((value)async{
             var notbody={
               'heading':'Patient Edited',
               'content':first_name.toString(),
               'sub_heading':age.toString()
             };
-            var response=await notificationApis.addNotification(body, context);
+            var response=await notificationApis.addNotification(notbody, context);
           });
       }
     else
@@ -275,7 +277,7 @@ class _PatientFormState extends State<PatientForm> {
                 firstDate:DateTime(1900),
                 lastDate: DateTime(2100));
                   // Show Date Picker Here
-                dobController.text=DateFormat('dd-MM-yyyy').format(DateTime.parse(date.toString()));
+                dobController.text=DateFormat('dd/MM/yyyy').format(DateTime.parse(date.toString()));
                 dob=dobController.text;
                 setState(() {});
                 }
@@ -460,11 +462,11 @@ class _PatientFormState extends State<PatientForm> {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (ctx, constraint) {
       return Container(
-          height: widget.type=='add'?MediaQuery.of(context).size.height * 0.8:MediaQuery.of(context).size.height * 0.6,
+          height: widget.type=='add'?MediaQuery.of(context).size.height * 0.8:MediaQuery.of(context).size.height * 0.8,
           margin: EdgeInsets.all(10),
           child: Column(
             children: [
-              widget.type=='add'?AddPicture(type: 'profile',fun:addPicFun):Container(),
+              widget.type=='add'?AddPicture(type: 'profile',fun:addPicFun):AddPicture(type: 'profile',subType:'view',profile_image:widget.patDetails.pat_image.toString(),fun:addPicFun),
               Form(
                   key: _formKey,
                   child: Container(

@@ -1,7 +1,7 @@
+import 'package:doctor_app/models/table_item.dart';
 import 'package:doctor_app/patient/add_patient/documents.dart';
 import 'package:flutter/material.dart';
-import 'package:open_document/my_files/init.dart';
-import 'package:open_file/open_file.dart';
+import 'package:intl/intl.dart';
 
 import '../../global_variables.dart';
 import '../add_patient/add_picture.dart';
@@ -39,6 +39,37 @@ var count=1;
 
   }
 
+  createDateList(dob,sex)
+  {
+    print('dob:$dob');
+    DateTime date = DateFormat.yMd().parse(dob);
+    var dateList=[];
+    dateList.add(date.add(Duration(days: 0)).toString().split(' ')[0]);
+    dateList.add(date.add(Duration(days:42)).toString().split(' ')[0]);
+    dateList.add(date.add(Duration(days: 70)).toString().split(' ')[0]);
+    dateList.add(date.add(Duration(days: 98)).toString().split(' ')[0]);
+    dateList.add(DateTime(date.year, date.month + 6, date.day).toString().split(' ')[0]);
+    dateList.add(DateTime(date.year, date.month + 7, date.day).toString().split(' ')[0]);
+    dateList.add("${DateTime(date.year, date.month + 6, date.day).toString().split(' ')[0]} - ${DateTime(date.year, date.month + 9, date.day).toString().split(' ')[0]}");
+    dateList.add(DateTime(date.year, date.month + 9, date.day).toString().split(' ')[0]);
+    dateList.add("${DateTime(date.year, date.month + 12, date.day).toString().split(' ')[0]} - ${DateTime(date.year, date.month + 15, date.day).toString().split(' ')[0]}");
+    dateList.add(DateTime(date.year, date.month + 15, date.day).toString().split(' ')[0]);
+    dateList.add("${DateTime(date.year, date.month + 16, date.day).toString().split(' ')[0]} - ${DateTime(date.year, date.month + 18, date.day).toString().split(' ')[0]}");
+    dateList.add("${DateTime(date.year, date.month + 18, date.day).toString().split(' ')[0]} - ${DateTime(date.year, date.month + 19, date.day).toString().split(' ')[0]}");
+    dateList.add('${DateTime(date.year + 4, date.month, date.day).toString().split(' ')[0]} - ${DateTime(date.year + 6, date.month, date.day).toString().split(' ')[0]}');
+    if(sex=='Female')
+      {
+        dateList.add('${DateTime(date.year + 9, date.month, date.day).toString().split(' ')[0]} - ${DateTime(date.year + 15, date.month, date.day).toString().split(' ')[0]}');
+      }
+    else
+      {
+        dateList.add('-nil-');
+      }
+    dateList.add('${DateTime(date.year + 10, date.month, date.day).toString().split(' ')[0]} - ${DateTime(date.year + 12, date.month, date.day).toString().split(' ')[0]}');
+    dateList.add('${DateTime(date.year + 2, date.month, date.day).toString().split(' ')[0]}/${DateTime(date.year + 3, date.month, date.day).toString().split(' ')[0]}/${DateTime(date.year + 4, date.month, date.day).toString().split(' ')[0]}/${DateTime(date.year + 5, date.month, date.day).toString().split(' ')[0]}');
+    print(dateList.length);
+    return dateList;
+  }
   editButton(title,height)
   {
     return Row(
@@ -54,7 +85,24 @@ var count=1;
            if(title=='pdf')
              {
                print('entered');
-               final pdfFile = await pdfDocument.createHelloWorld(widget.patDetails);
+               print(ageList.length);
+               var items=[];
+               if(widget.patDetails.dob.toString()!='null')
+                 {
+                   List dates=createDateList(widget.patDetails.dob,widget.patDetails.sex);
+                   for(int i=0;i<ageList.length;i++)
+                   {
+                     items.add(TableItem(age:ageList[i], name:vacList[i], date:dates[i],vaccine: '',comment: ''));
+                   }
+                 }
+               else
+                 {
+                   for(int i=0;i<ageList.length;i++)
+                   {
+                     items.add(TableItem(age:ageList[i], name:vacList[i], date:'',vaccine: '',comment: ''));
+                   }
+                 }
+               final pdfFile = await pdfDocument.createHelloWorld(widget.patDetails,items);
                print(pdfFile);
                pdfDocument.openFile(pdfFile);
                // await pdfDocument.savePdfFile("Pdf :$count",data).then((value) {
@@ -99,7 +147,7 @@ var count=1;
             SingleChildScrollView(
               child: Column(
                 children: [
-                  AddPicture(type:'profile',profile_image:widget.patDetails.pat_image,fun:addPicFun,),
+                  //AddPicture(type:'profile',profile_image:widget.patDetails.pat_image,fun:addPicFun,),
                   PatientForm(type:'update',patDetails: widget.patDetails,edit:edit),
                 ],
               ),

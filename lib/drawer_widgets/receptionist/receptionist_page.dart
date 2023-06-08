@@ -21,18 +21,18 @@ class _ReceptionistPageState extends State<ReceptionistPage> {
     return Card(
         margin: EdgeInsets.only(bottom: 10),
         child: ListTile(
-          trailing:StatusButton(status:response.status.toString()),
+          trailing:StatusButton(details:response,status:response.status.toString()),
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(height:height*0.01,),
-              Text('name : ${response.name.toString()}',style:TextStyle(
+              Text('email : ${response.email.toString()}',style:TextStyle(
                   fontWeight: FontWeight.w400,
                   fontFamily: 'Inter',
                   fontSize: 17,color:Colors.blue),),
               SizedBox(height:height*0.01,),
-              Text('email - ${response.email.toString()}',style: TextStyle(
+              Text('password - ${response.password.toString()}',style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Inter',
                   fontSize: 18,color:Color.fromRGBO(0, 0, 0, 0.87)),),

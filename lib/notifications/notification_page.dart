@@ -69,7 +69,7 @@ class _NotificationPageState extends State<NotificationPage> {
           height:double.maxFinite,
           child: notificationsList.isEmpty?Center(child: Text('Oopss!! Notifications list is empty',style: Theme.of(context).textTheme.headline2,)):ListView(
             controller: _scrollController,
-            children: notificationsList.map((response) => cardWidget(response,width,height)).toList(),
+            children: notificationsList.reversed.map((response) => cardWidget(response,width,height)).toList(),
           ),
         ),
       ),

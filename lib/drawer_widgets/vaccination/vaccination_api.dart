@@ -91,6 +91,7 @@ class VaccinationApis{
       var body={
         'due_date':date.toString()
       };
+      print(json.encode(body));
       var Response = await http.post(url,body: json.encode(body),headers: {
         'content-Type': 'application/json',
       });

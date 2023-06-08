@@ -80,9 +80,13 @@ class _AddMessageState extends State<AddMessage> {
             var date2 = outputFormat.format(date1);
             // var date1= DateFormat('yMd').format(DateTime.parse(dateController.text.toString()));
             date3=DateFormat("yyyy-MM-dd hh:mm:ss").parse(date2.toString()+' 11:00:00');
-            getVaccPatList();
+            if(widget.page=='vaccination')
+              getVaccPatList();
+
             setState(() {
               error=false;
+              if(widget.page!='vaccination')
+                loading=false;
             });
           } : null,
           maxLength: limit,

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart' as Img;
 import 'package:flutter/material.dart';
+import 'package:open_file_plus/open_file_plus.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../global_variables.dart';
@@ -11,9 +12,10 @@ import '../../local_storage_classes/local_storage.dart';
 import '../patient_api.dart';
 class AddPicture extends StatefulWidget {
   var type;
+  var subType;
   var profile_image;
   var fun;
-  AddPicture({required this.type,this.fun,this.profile_image});
+  AddPicture({required this.type,this.subType,this.fun,this.profile_image});
 
   @override
   State<AddPicture> createState() => _AddPictureState();
@@ -183,13 +185,7 @@ class _AddPictureState extends State<AddPicture> {
         {
           imageUrlList.add(imageUrl);
         }
-      Map<String,String> dataToSend={
-        'profile_image':widget.type!='docs'?imageUrl.toString():'',
-        'documents':widget.type=='docs'?imageUrlList.toString():''
-      };
-      print(dataToSend);
 
-      _reference.add(dataToSend);
     }catch(error)
     {
       print(error);
@@ -199,7 +195,7 @@ class _AddPictureState extends State<AddPicture> {
     var pickedFile = await Img.ImagePicker().pickImage(source: Img.ImageSource.camera);
     if (pickedFile != null) {
       imageFile =File(pickedFile!.path);
-
+        OpenFile.open(pickedFile!.path);
         if(widget.type=='docs')
         {
           setState(() {
@@ -214,7 +210,17 @@ class _AddPictureState extends State<AddPicture> {
           // imageList.clear();
           // imageList.add(imageFile);
           profileImage=imageFile;
-          widget.fun('profile',imageFile);
+          if(widget.type=='profile' && widget.subType=='view')
+          {
+              await uploadTOFirebase();
+              widget.fun('profile',imageUrl);
+          }
+          else
+            {
+              widget.fun('profile',imageFile);
+            }
+
+
          // uploadTOFirebase();
         }
           setState((){
@@ -303,7 +309,7 @@ class _AddPictureState extends State<AddPicture> {
             decoration: BoxDecoration(
                 shape: BoxShape.rectangle,
                 color: Colors.black12,
-                image: DecorationImage(image:widget.profile_image!=null?NetworkImage(widget.profile_image):AssetImage('assets/images/Image.png') as ImageProvider,fit: BoxFit.cover)
+                image: DecorationImage(image:widget.profile_image.toString()!='null'?NetworkImage(widget.profile_image):AssetImage('assets/images/Image.png') as ImageProvider,fit: BoxFit.cover)
             ),
             child: widget.type=='profile'?profileImage==null?Container():imageLoading?Center(child: CircularProgressIndicator()):Image.file(
               profileImage,
