@@ -26,17 +26,24 @@ class ProfileApi{
         if(response['status']=='success')
         {
           showSnackBar.showToast('updated profile successfully',context);
-          await secureStorage.writeSecureData('doctorDetails',json.encode(response['details']));
+
           var det=await secureStorage.readSecureData('doctorDetails');
-          doctorDetails=json.decode(det);
+          response['details']['role']=response['role'];
+          print('res:$response');
+          await secureStorage.writeSecureData('doctorDetails',json.encode(response['details']));
+          var det1=await secureStorage.readSecureData('doctorDetails');
+          doctorDetails=json.decode(det1);
+          print(doctorDetails);
           DoctorDetails(
             id: response['details']['id'],
             name: response['details']['name'],
-            mobile_number:response['details']['name'],
-            whatsapp_number:response['details']['name'],
+            role: response['role'],
+            mobile_number:response['details']['mobile_number'],
+            whatsapp_number:response['details']['whatsapp_number'],
             email:response['details']['email'],
             password: response['details']['password'],
           );
+          showSnackBar.showToast('updated status successfully!', context);
           return true;
         }
         else

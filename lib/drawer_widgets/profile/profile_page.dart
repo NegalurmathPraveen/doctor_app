@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:doctor_app/drawer_widgets/profile/profile_api.dart';
 import 'package:doctor_app/patient/add_patient/add_picture.dart';
 import 'package:flutter/material.dart';
@@ -89,7 +91,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 return null;
               }
             } else if (labelText == 'Mobile' || labelText == 'Whatsapp') {
-              if (value!.length < 10 || value.length > 10) {
+              if (value!.isEmpty) {
+                return null;
+              }
+              else if (value!.isNotEmpty && (value!.length < 10 || value.length > 10)) {
                 return 'should contain only 10 digits';
               } else {
                 return null;
@@ -133,7 +138,12 @@ class _ProfilePageState extends State<ProfilePage> {
       "email":doctorDetails['email']!=email && email.toString()!=null?email:doctorDetails['email'],
       "password":doctorDetails['password']!=password && password.toString()!=null && password.toString()!=''?password:doctorDetails['password']
     };
-    var res=await profileApi.editDocProfile(body, context);
+    var body1={
+      "role":doctorDetails['role'],
+      "body":body
+    };
+    var res=await profileApi.editDocProfile(body1, context);
+
     print(res);
   }
 

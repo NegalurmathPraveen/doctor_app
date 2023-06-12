@@ -24,18 +24,30 @@ ApiErrorHandling apiErrorHandling=ApiErrorHandling();
         print(response);
         if(response['status']=='success')
           {
-            showSnackBar.showToast('logged in successfully',context);
             doctorDetails=response['details'];
+            role=response['role'];
+            response['details']['role']=response['role'];
             secureStorage.writeSecureData('doctorDetails',json.encode(response['details']));
             DoctorDetails(
               id: response['details']['id'],
               name: response['details']['name'],
+              role:response['details']['role'],
               mobile_number:response['details']['name'],
               whatsapp_number:response['details']['name'],
               email:response['details']['email'],
+              status: role=='receptionist'?response['details']['status']:null,
               password: response['details']['password'],
             );
-            return true;
+            if(role=='receptionist' && response['details']['status']=='inactive')
+              {
+                showSnackBar.showToast('sorry! unable to login,try again later',context);
+                return false;
+              }
+            else
+              {
+                showSnackBar.showToast('logged in successfully',context);
+                return true;
+              }
           }
         else
           {

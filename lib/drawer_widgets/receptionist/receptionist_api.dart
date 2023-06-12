@@ -89,7 +89,7 @@ class ReceptionistApis{
 
   Future updateReceptionistDetails(var body, var context) async {
     try {
-      var url = Uri.parse(URL +'editReceptionistProfile');
+      var url = Uri.parse(URL +'updateReceptionistDetails');
       print(url);
       print(json.encode(body));
       var Response = await http.post(url, body: json.encode(body), headers: {
@@ -143,4 +143,31 @@ class ReceptionistApis{
   //     print(error);
   //   }
   // }
+
+  Future checkStatus(var body, var context) async {
+    try {
+      var url = Uri.parse(URL +'checkReceptionistStatus');
+      print(url);
+      print(json.encode(body));
+      var Response = await http.post(url, body: json.encode(body), headers: {
+        'content-Type': 'application/json',
+      });
+      var response = json.decode(Response.body);
+      print(response);
+      if (Response.statusCode == 200) {
+        if (response['status'] == 'active') {
+          return true;
+        }
+        else {
+          return false;
+        }
+      }
+      else {
+        apiErrorHandling.apiErrorHandlerFun(Response.statusCode, context);
+        throw response;
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
 }

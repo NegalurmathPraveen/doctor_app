@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
 const String URL = "http://laconicpharma.com/doctor_app_apis-master/public/api/";
-
+//const String URL = "http://10.0.2.2:8000/api/";
 final int patientId=0;
 bool newUser=true;
 String mobileNumber='';
 String screenStage = 'false';
+var role;
 
 //appbar height
 var appBarHeight;

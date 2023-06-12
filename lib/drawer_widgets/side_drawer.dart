@@ -4,6 +4,7 @@ import 'package:doctor_app/login/login_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../local_storage_classes/secure_storage.dart';
+import 'about_us/about_us_page.dart';
 import 'receptionist/receptionist_page.dart';
 import 'vaccination/vaccination_page.dart';
 
@@ -17,16 +18,28 @@ class SideDrawer extends StatefulWidget {
 class _SideDrawerState extends State<SideDrawer> {
   SecureStorage secureStorage=SecureStorage();
 
-  List drawerList=['Receptionist','Vaccination Follow up','About Us','Settings','Logout'];
+  List drawerList=['Receptionist','Vaccination Follow up','About Us','Logout'];
 
-  List icons=[Icon(Icons.group_outlined,color: Color.fromRGBO(2, 113, 253, 1),),Icon(Icons.vaccines,color: Color.fromRGBO(2, 113, 253, 1)),Icon(Icons.person_pin_outlined,color: Color.fromRGBO(2, 113, 253, 1)),Icon(Icons.settings,color: Color.fromRGBO(2, 113, 253, 1)),Icon(Icons.logout_rounded,color: Colors.red,)];
+  List icons=[Icon(Icons.group_outlined,color: Color.fromRGBO(2, 113, 253, 1),),Icon(Icons.vaccines,color: Color.fromRGBO(2, 113, 253, 1)),Icon(Icons.person_pin_outlined,color: Color.fromRGBO(2, 113, 253, 1)),Icon(Icons.logout_rounded,color: Colors.red,)];
 
   var index=0;
+
+  @override
+  void initState() {
+    if(role=='receptionist')
+      {
+        setState(() {
+          drawerList.removeAt(0);
+          icons.removeAt(0);
+        });
+      }
+    super.initState();
+  }
 
 
   Widget drawerItem(var item,BuildContext context)
   {
-    if(index>4)
+    if(index>3)
     {
       index=0;
     }
@@ -49,7 +62,8 @@ class _SideDrawerState extends State<SideDrawer> {
           }
           else if(item=='About Us')
           {
-
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (c) => AboutUs()));
           }
           else if(item=='Settings')
           {

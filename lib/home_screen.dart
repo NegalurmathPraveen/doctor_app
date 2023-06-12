@@ -271,7 +271,7 @@ class _HomeScreenState extends State<HomeScreen> {
           SingleChildScrollView(
             child: Stack(
               children: [Container(
-                height:height*0.7,
+                height:height*0.73,
                 child: patientList.isEmpty?Center(child: Text('Oopss!! Patients list is empty',style: Theme.of(context).textTheme.headline2,)):ListView(
                   controller: _scrollController,
                   children: subList.length!=0?subList.map((response) => cardWidget(response,width,height)).toList():patientList.map((response) => cardWidget(response,width,height)).toList(),

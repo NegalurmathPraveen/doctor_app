@@ -67,11 +67,12 @@ class _VisitationPageState extends State<VisitationPage> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(onPressed: (){
-        showDialog(context: context,
+      floatingActionButton: FloatingActionButton(onPressed: ()async{
+        visitationList=await showDialog(context: context,
             builder:(_)=>VisitationAlertDialog(patDetails: widget.patDetails,),
             barrierDismissible: true
         );
+        setState(() {});
       },child: Icon(Icons.add),),
     );
   }

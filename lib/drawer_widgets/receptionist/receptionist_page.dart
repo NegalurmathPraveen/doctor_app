@@ -76,9 +76,10 @@ class _ReceptionistPageState extends State<ReceptionistPage> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(onPressed: (){
-        Navigator.of(context).push(MaterialPageRoute(
+      floatingActionButton: FloatingActionButton(onPressed: ()async{
+         receptionistList=await Navigator.of(context).push(MaterialPageRoute(
             builder: (c) =>AddReceptionist(type:'add')));
+         setState(() {});
       },child: Icon(Icons.add),),
     );
   }

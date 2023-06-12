@@ -32,7 +32,7 @@ class _StatusButtonState extends State<StatusButton> {
      var body={
       "email":widget.details.email,
       "password":widget.details.password,
-      "status":status.toString()
+      "status":status?'active':'inactive'
       };
       var res=await receptionistApis.updateReceptionistDetails(body, context);
     },child: Text(status?'active':'inactive',));

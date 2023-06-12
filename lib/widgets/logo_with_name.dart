@@ -8,7 +8,6 @@ class LogoWithName extends StatelessWidget {
     double height = MediaQuery.of(context).size.height;
     return LayoutBuilder(builder: (ctx,constraint){
       return Container(
-        color: Colors.white10,
         height: height * 0.6,
         width: width * 0.7,
         child: Column(
@@ -21,17 +20,17 @@ class LogoWithName extends StatelessWidget {
                     color: Colors.black12,
                     image:DecorationImage(
                         fit: BoxFit.fill,
-                        image:  AssetImage('assets/images/splash_screen_image.png',)
+                        image:  AssetImage('assets/icon/logo.png',)
                     ) ),
               ),
-              SizedBox(height:height * 0.05,),
-              Container(
-                width: width,
-                child: Text('PARK VIEW CLINIC',style: TextStyle(fontFamily:'Inter',
-                    color: Colors.black,fontSize: 18,fontWeight: FontWeight.w400),
-                    textAlign: TextAlign.center,
-                ),
-              )
+              // SizedBox(height:height * 0.05,),
+              // Container(
+              //   width: width,
+              //   child: Text('PARK VIEW CLINIC',style: TextStyle(fontFamily:'Inter',
+              //       color: Colors.black,fontSize: 18,fontWeight: FontWeight.w400),
+              //       textAlign: TextAlign.center,
+              //   ),
+              // )
             ]
         ),
       );

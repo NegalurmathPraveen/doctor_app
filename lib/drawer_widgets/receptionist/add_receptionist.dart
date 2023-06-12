@@ -129,12 +129,16 @@ class _AddReceptionistState extends State<AddReceptionist> {
     };
     if(widget.type=='add')
       {
-        var res=await receptionistApis.submitReceptionistDetails(body, context);
-        print(res);
+        var res=await receptionistApis.submitReceptionistDetails(body, context).then((value)async{
+         var res1=await receptionistApis.getAllReceptionistList(context);
+         Navigator.pop(context,res1);
+        });
       }
     else{
-      var res=await receptionistApis.updateReceptionistDetails(body, context);
-      print(res);
+      var res=await receptionistApis.updateReceptionistDetails(body, context).then((value)async{
+        var res1=await receptionistApis.getAllReceptionistList(context);
+        Navigator.pop(context,res1);
+      });
     }
     
   }

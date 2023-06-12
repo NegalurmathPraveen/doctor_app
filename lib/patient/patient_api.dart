@@ -60,6 +60,7 @@ class PatientApi {
       if (Response.statusCode == 200) {
         if (response['status'] == 'success') {
           print(response['status']);
+          patientList=await getAllPatientsList(page, context);
           showSnackBar.showToast('added patient successfully!', context);
         }
         else {
@@ -171,7 +172,7 @@ class PatientApi {
 
   Future updatePatientDetails(var details,var picDetails,var body, var context) async {
     try {
-      body['pat_image']=picDetails['profile_image'].toString()!=null?picDetails['profile_image']:details.pat_image;
+      body['pat_image']=picDetails!=null?picDetails['profile_image'].toString()!='null'?picDetails['profile_image']:details.pat_image:details.pat_image;
       body['documents']=details.documents;
       var url = Uri.parse(URL + 'editPatientProfile');
       print(url);
@@ -183,6 +184,7 @@ class PatientApi {
       if (Response.statusCode == 200) {
         if (response['status'] == 'success') {
           print(response['status']);
+          patientList=await getAllPatientsList(page, context);
           showSnackBar.showToast('updated patient details successfully!', context);
         }
         else {

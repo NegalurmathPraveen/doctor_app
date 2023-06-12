@@ -23,6 +23,8 @@ class _PatientFormState extends State<PatientForm> {
   PatientApi patientApi=PatientApi();
   NotificationApis notificationApis=NotificationApis();
   var _formKey = GlobalKey<FormState>();
+  var display=true;
+  var loading=false;
   var noDob=false;
   var picDetails;
   var image;
@@ -53,8 +55,20 @@ class _PatientFormState extends State<PatientForm> {
   var additional_notes;
   TextEditingController dobController = TextEditingController();
 
-
-
+  @override
+  void initState() {
+    // TODO: implement initState
+    if(widget.type=='update')
+    {
+      dob=widget.patDetails.dob;
+      print(dob);
+      setState(() {
+        print('came here');
+        noDob=false;
+      });
+    }
+    super.initState();
+  }
    textButton() {
     return TextButton(
       // height: 75,
@@ -65,11 +79,11 @@ class _PatientFormState extends State<PatientForm> {
         print('entered');
         if (isValid) {
           _formKey.currentState!.save();
+          print(dob);
           if(dob.toString().isEmpty)
             {
-              setState(() {
-                noDob=true;
-              });
+              noDob=true;
+              setState(() {});
             }
           else
             {
@@ -96,8 +110,10 @@ class _PatientFormState extends State<PatientForm> {
       ),
     );
   }
-
   submitDetails(){
+    setState(() {
+      loading=true;
+    });
     var body = {
       'first_name': first_name.toString(),
       'mid_name': mid_name,
@@ -136,6 +152,7 @@ class _PatientFormState extends State<PatientForm> {
               'sub_heading':age.toString()
             };
             var response=await notificationApis.addNotification(notbody, context);
+            Navigator.pop(context);
           });
       }
     else
@@ -186,6 +203,7 @@ class _PatientFormState extends State<PatientForm> {
   Widget heightDropdownButton(var title) {
     return DropdownButtonHideUnderline(
       child: DropdownButton(
+
         //isDense: true,
         isExpanded: true,
         //borderRadius: BorderRadius.circular(10.0),
@@ -218,7 +236,7 @@ class _PatientFormState extends State<PatientForm> {
                   );
                 },
               ).toList(),
-        onChanged: title == 'sex'
+        onChanged:widget.type=='update' && widget.edit?null: title == 'sex'
             ? (sex1) {
                 setState(
                   () {
@@ -261,13 +279,13 @@ class _PatientFormState extends State<PatientForm> {
         ),
         TextFormField(
           readOnly: widget.edit==null?false:widget.edit,
-          initialValue:widget.type=='update'?labelText=='first_name'?widget.patDetails.first_name:labelText=='mid_name'?widget.patDetails.mid_name:labelText=='last_name'?widget.patDetails.last_name:labelText=='age'?widget.patDetails.age.toString():labelText=='dob'?widget.patDetails.dob
+          initialValue:widget.type=='update'?labelText=='first_name'?widget.patDetails.first_name:labelText=='mid_name'?widget.patDetails.mid_name:labelText=='last_name'?widget.patDetails.last_name:labelText=='age'?widget.patDetails.age.toString()
              :labelText=='mob_num'?widget.patDetails.mob_num.toString():labelText=='second_mob_num'?widget.patDetails.second_mob_num:labelText=='whatsapp_num'?widget.patDetails.whatsapp_num:labelText=='email'?widget.patDetails.email:labelText=='father_name'?widget.patDetails.father_name:labelText=='mother_name'?widget.patDetails.mother_name
               :labelText=='address'?widget.patDetails.address:labelText=='city'?widget.patDetails.city:labelText=='pincode'?widget.patDetails.pincode:labelText=='referred_by'?widget.patDetails.referred_by:labelText=='allergies'?widget.patDetails.allergies:labelText=='pre_term_days'?widget.patDetails.pre_term_days.toString()
               :labelText=='sec_num_type'?widget.patDetails.sec_num_type:labelText=='significant_history'?widget.patDetails.significant_history:labelText=='office_id'?widget.patDetails.office_id:labelText=='patient_id'?widget.patDetails.patient_id
               :widget.patDetails.additional_notes:null,
           onTap: labelText == 'dob'
-              ? ()async{
+              ?widget.type=='update' && widget.edit?null:()async{
                   // Below line stops keyboard from appearing
             DateTime? date = DateTime(1900);
             FocusScope.of(context).requestFocus(new FocusNode());
@@ -279,7 +297,9 @@ class _PatientFormState extends State<PatientForm> {
                   // Show Date Picker Here
                 dobController.text=DateFormat('dd/MM/yyyy').format(DateTime.parse(date.toString()));
                 dob=dobController.text;
-                setState(() {});
+                setState(() {
+                  display=false;
+                });
                 }
               : null,
           maxLength: limit,
@@ -313,7 +333,7 @@ class _PatientFormState extends State<PatientForm> {
               //labelText == 'medicine name'?(value){ medNameList.add(value);}:labelText == 'Mg'?(value){MgList.add(value);}:labelText == 'times'?(value){timesList.add(value);}:labelText == 'morning iu'?(value){morIuList.add(value);}:labelText == 'afternoon iu'?(value){noonIuList.add(value);}:labelText == 'evening iu'?(value){evenIuList.add(value);}:labelText == 'Insulin'?(value){insulinInjectionList.add(value);}:
               (value) {},
           decoration: InputDecoration(
-            hintText: labelText=='dob'?dobController.text:null,
+            hintText: labelText=='dob'?widget.type=='update' && display?widget.patDetails.dob:dobController.text:null,
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
               contentPadding:
@@ -397,8 +417,6 @@ class _PatientFormState extends State<PatientForm> {
               age = value!;
             } else if (labelText == 'age_group') {
               age_group = value;
-            } else if (labelText == 'dob') {
-              dob = dobController.text;
             } else if (labelText == 'mob_num') {
               mob_num = value!;
             } else if (labelText == 'second_mob_num') {
@@ -462,9 +480,10 @@ class _PatientFormState extends State<PatientForm> {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (ctx, constraint) {
       return Container(
-          height: widget.type=='add'?MediaQuery.of(context).size.height * 0.8:MediaQuery.of(context).size.height * 0.8,
-          margin: EdgeInsets.all(10),
-          child: Column(
+        height: widget.type=='add'?MediaQuery.of(context).size.height * 0.8:MediaQuery.of(context).size.height * 0.8,
+        margin: EdgeInsets.all(10),
+        child: Stack(
+          children: [Column(
             children: [
               widget.type=='add'?AddPicture(type: 'profile',fun:addPicFun):AddPicture(type: 'profile',subType:'view',profile_image:widget.patDetails.pat_image.toString(),fun:addPicFun),
               Form(
@@ -539,7 +558,12 @@ class _PatientFormState extends State<PatientForm> {
                 color: Colors.red,
               ),):Container()
             ],
-          ));
+          ),
+            loading?Center(
+                child: CircularProgressIndicator()):Container()
+
+          ]
+        ));
     });
   }
 }

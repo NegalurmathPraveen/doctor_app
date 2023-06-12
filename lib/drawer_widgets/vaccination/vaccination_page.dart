@@ -73,9 +73,10 @@ class _VaccinationPageState extends State<VaccinationPage> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(onPressed: (){
-        Navigator.of(context).push(MaterialPageRoute(
+      floatingActionButton: FloatingActionButton(onPressed: ()async{
+        vaccinationList=await Navigator.of(context).push(MaterialPageRoute(
             builder: (c) =>VaccineMessage()));
+        setState(() {});
       },child: Icon(Icons.add),),
     );
   }

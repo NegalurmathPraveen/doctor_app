@@ -138,7 +138,10 @@ class _AddMessageState extends State<AddMessage> {
       "due_date":date3.toString(),
       "mobile_nos":nos.toString().replaceAll('[', '').replaceAll(']','')
     };
-      var res=await vaccinationApis.addVaccination(body, context).then((value) => Navigator.pop(context));
+      var res=await vaccinationApis.addVaccination(body, context).then((value)async{
+        var list= await vaccinationApis.getVaccination(context);
+        Navigator.pop(context,list);
+      });
 
   }
 
@@ -162,7 +165,10 @@ class _AddMessageState extends State<AddMessage> {
     // });
 
     var res=await whatsappMsg.whatsappMsg(details, context).then((value)async{
-      await visitationApis.addNextVisitation(body, context).then((value) => Navigator.pop(context));
+      await visitationApis.addNextVisitation(body, context).then((value)async{
+        var list=await visitationApis.getVisitations(widget.patDetails.id, context);
+        Navigator.pop(context,list);
+      });
     });
 
   }
