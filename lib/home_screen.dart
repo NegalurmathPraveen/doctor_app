@@ -27,8 +27,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    getPatientslist();
     super.initState();
+    getPatientslist();
   }
 
   searchFunction(value)

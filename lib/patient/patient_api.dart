@@ -60,7 +60,9 @@ class PatientApi {
       if (Response.statusCode == 200) {
         if (response['status'] == 'success') {
           print(response['status']);
-          patientList=await getAllPatientsList(page, context);
+          var last=await getLastPage(context);
+          patientList=await getAllPatientsList(last, context);
+          constList=List.from(patientList);
           showSnackBar.showToast('added patient successfully!', context);
         }
         else {
@@ -115,7 +117,6 @@ class PatientApi {
         print(response);
         if (response['status'] == 'success') {
            page=response['last_page'];
-           //page=434;
         }
         else {
           showSnackBar.showToast('something went wrong!', context);
@@ -184,7 +185,9 @@ class PatientApi {
       if (Response.statusCode == 200) {
         if (response['status'] == 'success') {
           print(response['status']);
-          patientList=await getAllPatientsList(page, context);
+          var last=await getLastPage(context);
+          patientList=await getAllPatientsList(last, context);
+          constList=List.from(patientList);
           showSnackBar.showToast('updated patient details successfully!', context);
         }
         else {
@@ -199,10 +202,5 @@ class PatientApi {
     } catch (error) {
       print(error);
     }
-  }
-
-  uploadUpdatedPatProfilePic(var id,var imageUrl)
-  {
-
   }
 }

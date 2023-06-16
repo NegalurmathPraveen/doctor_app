@@ -60,6 +60,8 @@ class _PatientFormState extends State<PatientForm> {
     // TODO: implement initState
     if(widget.type=='update')
     {
+      sex=widget.patDetails.sex.toString();
+      blood_group=widget.patDetails.blood_group.toString();
       dob=widget.patDetails.dob;
       print(dob);
       setState(() {
